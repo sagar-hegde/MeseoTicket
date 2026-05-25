@@ -1,0 +1,139 @@
+body {
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    background: #294886;
+    color: #fff;
+    padding: 16px;
+    text-align: center;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+}
+
+.logo {
+    color: black;
+    margin-left: 25px;
+    font-size: 25px;
+}
+
+.log {
+    display: flex;
+    right: 0;
+    margin-right: 20px;
+}
+
+.log button {
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    font-weight: 500;
+    font-size: 20px;
+    color: #edf0f1;
+    text-decoration: none;
+    padding: 9px 25px;
+    background-color: #5102a0;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease 0s;
+}
+
+.log button:hover {
+    background-color: #cc3625;
+}
+
+nav {
+    background: linear-gradient(120deg,#f8c390, #d279ee);
+    padding: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+}
+
+nav ul {
+    width: 90%;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+}
+
+nav li {
+    display: inline-block;
+    margin: 0 16px;
+    font-size: 20px;
+}
+
+nav a {
+    text-decoration: none;
+    color: #fff;
+}
+
+nav a:hover {
+    color: #500460;
+}
+
+main {
+    max-width: 800px;
+    margin: 32px auto;
+    padding: 16px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.monument-card {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 16px;
+    margin-bottom: 16px;
+    position: relative;
+}
+
+.monument-card img {
+    max-width: 80%;
+    height: auto;
+    position: relative;
+    left: 10%;
+    border-radius: 5px;
+}
+
+.book button {
+    width: 400px;
+    height: 50px;
+    border: 1px solid;
+    position: absolute;
+    bottom: 2%;
+    left: 50%;
+    transform: translate(-50%);
+    background: #2691d9;
+    border-radius: 15px;
+    font-size: 18px;
+    color: #e9f4fb;
+    font-weight: 700;
+    cursor: pointer;
+    outline: none;  
+}
+
+.book button:hover {
+    background-color: #119a01;
+}
+
+.location{
+    text-decoration: none;
+    color: black;
+}
+
+.location:hover{
+    color: #119a01;
+}
+
+footer {
+    text-align: center;
+    padding: 16px;
+    background: linear-gradient(120deg,#f8c390, #d279ee);
+    color: #fff;
+}

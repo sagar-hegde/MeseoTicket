@@ -1,0 +1,86 @@
+body {
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    background: linear-gradient(120deg,#f8c390, #d279ee);
+    margin: 0;
+    padding: 0;
+}
+
+.box {
+    max-width: 800px;
+    margin: 20px auto;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.container {
+    max-width: 800px;
+    margin: 20px auto;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+h2 {
+    text-align: center;
+}
+
+.time {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.time label {
+    margin-right: 10px; 
+}
+
+.Slot {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+table,th,td {
+    border: 1px solid #ccc;
+}
+
+th,td {
+    padding: 12px;
+}
+
+th {
+    background-color: #f2f2f2;
+}
+
+button {
+    background-color: #2691d9;
+    color: #fff;
+    padding: 12px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+button:hover {
+    background-color: #119a01;
+}
+
+button.payment {
+    margin-left: auto;
+}
+
+.deleteButton {
+    background-color: #f17565;
+}
+
+.deleteButton:hover {
+    background-color: #e74c3c;
+}
