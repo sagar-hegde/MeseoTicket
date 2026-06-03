@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Signup</title>
+  <link rel="stylesheet" href="/CSS/SignLogPass.css">
+  <link rel="icon" href="/IMG/MT-ICON.png">
+</head>
+<body>
+  <div class="container">
+    <input type="checkbox" id="check">
+    <div class="signup form">
+      <header>Signup</header>
+      <form id="main">
+        <input type="text" placeholder="Enter your Username" id="username" required>
+        <input type="email" placeholder="Enter your Email" id="email" required>
+        <input type="password" placeholder="Enter your password" id="password" required>
+        <input type="password" placeholder="Confirm password" required>
+        <input type="submit" class="button" value="Signup">
+      </form>
+      <div class="login">
+        <span class="login">Already have an Account ?
+         <label for="check"><a href="login.html">Login</a></label>
+        </span>
+      </div>
+    </div>
+  </div>
+</body>
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-analytics.js";
+  import {
+    getDatabase,
+    set,
+    ref,
+  } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+  import {
+    getAuth,
+    createUserWithEmailAndPassword,
+  } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyA3nyKHYnOWV7A8oq_OSk7yMgzMHxhRKVo",
+    authDomain: "forauth-3960c.firebaseapp.com",
+    databaseURL: "https://forauth-3960c-default-rtdb.firebaseio.com",
+    projectId: "forauth-3960c",
+    storageBucket: "forauth-3960c.appspot.com",
+    messagingSenderId: "339393008536",
+    appId: "1:339393008536:web:9651bede6c542a929651ed",
+    measurementId: "G-7LKQTGMCZG"
+  };
+
+
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+  const db = getDatabase();
+  const auth = getAuth(app);
+
+  let Email = document.getElementById("email");
+  let Pass = document.getElementById("password");
+  let Username = document.getElementById("username");
+  let Main = document.getElementById("main");
+
+  let registerUser = (evt) => {
+    evt.preventDefault();
+    createUserWithEmailAndPassword(auth, Email.value, Pass.value)
+      .then((Credentials) => {
+        const userId = Credentials.user.uid;
+        const userData = {
+          username: Username.value,
+          email: Email.value,
+        };
+        // Store user data in the Realtime Database under the 'UserAuthList' node
+        set(ref(db, "UserAuthList/" + userId), userData)
+          .then(() => {
+           window.location.href = "login.html";
+          })
+          .catch((error) => {
+            alert("Error storing user data: " + error.message);
+          });
+      })
+      .catch((error) => {
+        alert("Error creating user: " + error.message);
+      });
+  };
+
+  Main.addEventListener("submit", registerUser);
+  const page = document.getElementById("page");
+
+  const pageContain = document.querySelector('.page_contain');
+
+    function flipPage() {
+      pageContain.classList.toggle("page_flipped");
+    }
+</script>
+</html>

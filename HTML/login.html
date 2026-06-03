@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login</title>
+  <link rel="stylesheet" href="/CSS/SignLogPass.css">
+</head>
+<body>
+  <div class="container">
+    <input type="checkbox" id="check">
+    <div class="login form">
+      <header>Login</header>
+      <form id="mainform">
+        <input type="email" placeholder="Enter your Email"  id="emailinp" required>
+        <input type="password" placeholder="Enter your password"  id="passwordinp" required>
+        <a href="pass.html">Forgot Password ?</a>
+        <input type="submit" class="button" value="Login">
+      </form>
+      <div class="signup">
+        <span class="signup">Don't have an Account ?
+         <label for="check"><a href="signup.html">Signup</a></label>
+        </span>
+      </div>
+    </div>
+  </div>
+</body>
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-analytics.js";
+  import {
+    getDatabase,
+    get,
+    ref,
+    child,
+  } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+  import {
+    getAuth,
+    signInWithEmailAndPassword,
+  } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyA3nyKHYnOWV7A8oq_OSk7yMgzMHxhRKVo",
+    authDomain: "forauth-3960c.firebaseapp.com",
+    databaseURL: "https://forauth-3960c-default-rtdb.firebaseio.com",
+    projectId: "forauth-3960c",
+    storageBucket: "forauth-3960c.appspot.com",
+    messagingSenderId: "339393008536",
+    appId: "1:339393008536:web:9651bede6c542a929651ed",
+    measurementId: "G-7LKQTGMCZG"
+  };
+
+
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+  const db = getDatabase();
+  const auth = getAuth(app);
+  const dbref = ref(db);
+
+  let EmailInp = document.getElementById("emailinp");
+  let PassInp = document.getElementById("passwordinp");
+  let MainformInp = document.getElementById("mainform");
+
+  let loginUser = (evt) => {
+evt.preventDefault();
+signInWithEmailAndPassword(auth, EmailInp.value, PassInp.value)
+.then((Credentials) => {
+  console.log(Credentials);
+  get(child(dbref, 'UserAuthList/' + Credentials.user.uid)).then(
+    (snapshot) => {
+      if (snapshot.exists) {
+        console.log('User data found:', snapshot.val());
+        const userData = snapshot.val();
+        if (userData && userData.username) {
+          sessionStorage.setItem(
+            "user-info",
+            JSON.stringify({
+              username: userData.username
+            })
+          )
+        } else {
+          console.log('Username not found in user data');
+        }
+        sessionStorage.setItem("user-creds", JSON.stringify(Credentials.user));
+        window.location.href = 'dashboard.html'; 
+      } else {
+        console.log('User data not found in snapshot');
+      }
+    }
+  )
+})
+.catch((error) => {
+  alert(error.message);
+  console.error('Login error:', error.code, error.message);
+});
+};
+
+  MainformInp.addEventListener("submit", loginUser);
+</script>
+</html>

@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MeseoTicket</title>
+    <link rel="icon" href="/IMG/MT-ICON.png">
+    <style>
+        body {
+            font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background: #294886;
+            color: #fff;
+            padding: 16px;
+            text-align: center;
+            font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+        }
+
+        .logo {
+            color: black;
+            margin-left: 25px;
+            font-size: 25px;
+        }
+
+        .log {
+            display: flex;
+            right: 0;
+            margin-right: 20px;
+        }
+
+        .log button {
+            font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+            font-weight: 500;
+            font-size: 20px;
+            color: #edf0f1;
+            text-decoration: none;
+            padding: 9px 25px;
+            background-color: #5102a0;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease 0s;
+        }
+
+        .log button:hover {
+            background-color: #cc3625;
+        }
+
+        nav {
+            background: linear-gradient(120deg,#f8c390, #d279ee);
+            padding: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: row;
+        }
+
+        nav ul {
+            width: 90%;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+        }
+
+        nav li {
+            display: inline-block;
+            margin: 0 16px;
+            font-size: 20px;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #fff;
+        }
+
+        nav a:hover {
+            color: #500460;
+        }
+
+        main {
+            max-width: 800px;
+            margin: 32px auto;
+            padding: 16px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .monument-card {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 16px;
+            margin-bottom: 16px;
+            position: relative;
+        }
+
+        .monument-card img {
+            max-width: 80%;
+            height: auto;
+            position: relative;
+            left: 10%;
+            border-radius: 5px;
+        }
+
+        .book button {
+            width: 400px;
+            height: 50px;
+            border: 1px solid;
+            position: absolute;
+            bottom: 2%;
+            left: 50%;
+            transform: translate(-50%);
+            background: #2691d9;
+            border-radius: 15px;
+            font-size: 18px;
+            color: #e9f4fb;
+            font-weight: 700;
+            cursor: pointer;
+            outline: none;  
+        }
+
+        .book button:hover {
+            background-color: #119a01;
+        }
+
+        .location{
+            text-decoration: none;
+            color: black;
+        }
+
+        .location:hover{
+            color: #119a01;
+        }
+
+        footer {
+            text-align: center;
+            padding: 16px;
+            background: linear-gradient(120deg,#f8c390, #d279ee);
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h3>"Museums are not mere structures; they are living evidences to the beauty of history, the perseverance of civilizations, and the power of human creativity."</h3>
+    </header>
+    <nav>
+        <text class="logo">MeseoTicket</text>
+        <ul class="nav_links">
+            <li><a href="dashboard.html">Home</a></li>
+            <li><a href="ticket.html">My Tickets</a></li>
+            <li><a href="contact_in.html">Contact</a></li>
+        </ul>
+        <a class="log" href="index.html"><button>Logout</button></a>
+    </nav>
+    <main>
+        <h2>Welcome to MeseoTicket</h2>
+        <p>Explore and book tickets for Historic Museums in India.</p>
+    </main>
+    <main>
+        <h2>Explore Museums</h2>
+        <div class="monument-card">
+            <img src="/IMG/BN1.jpg" alt="Indian Museum">
+            <h3>Indian Museum</h3>
+            <p>Established in 1814, the Indian Museum in Kolkata is one of the oldest and largest museums in India. It houses a vast collection of artifacts, including art, archaeology, anthropology, and geology.</p>
+            <a class="location" href="https://maps.app.goo.gl/B3WDWpmLXyAZ5hgVA">Location</a><p></p><br><br>
+            <a class="book" href="bn1.html"><button>Book Now</button></a>
+        </div>
+        <div class="monument-card">
+            <img src="/IMG/BN2.jpg" alt="National Museum">
+            <h3>National Museum</h3>
+            <p>The National Museum in New Delhi is one of the premier museums in India. It has an extensive collection of art and artifacts, representing different periods of Indian history and culture. The museum's exhibits include sculptures, paintings, manuscripts, and more.</p>
+            <a class="location" href="https://maps.app.goo.gl/qCCRTgX7CF53L97g8">Location</a><p></p><br><br>
+            <a class="book" a href="bn2.html"><button>Book Now</button></a>
+        </div>
+        <div class="monument-card">
+            <img src="/IMG/BN3.png" alt="Chhatrapati Shivaji Maharaj Vastu Sangrahalaya">
+            <h3>Chhatrapati Shivaji Maharaj Vastu Sangrahalaya</h3>
+            <p>Located in Mumbai, this museum was established in the early 20th century. It features a diverse range of exhibits, including art, artifacts, and decorative pieces from various regions and time periods.</p>
+            <a class="location" href="https://maps.app.goo.gl/Xs91V5hLjS6p1uUF6">Location</a><p></p><br><br>
+            <a class="book" a href="bn3.html"><button>Book Now</button></a>
+        </div>
+        <div class="monument-card">
+            <img src="/IMG/BN4.jpg" alt="Salar Jung Museum">
+            <h3>Salar Jung Museum</h3>
+            <p>The Salar Jung Museum is one of the three national museums in India and is renowned for its collection of art and antiques. It houses a diverse range of items, including paintings, sculptures, textiles, manuscripts, and furniture.</p>
+            <a class="location" href="https://maps.app.goo.gl/4SEtQunedrAg9NB17">Location</a><p></p><br><br>
+            <a class="book" a href="bn4.html"><button>Book Now</button></a>
+        </div>
+        <div class="monument-card">
+            <img src="/IMG/BN5.jpg" alt="Victoria Memorial">
+            <h3>Victoria Memorial</h3>
+            <p>While not a traditional museum, the Victoria Memorial in Kolkata is an iconic structure that houses a museum within its premises. Built in memory of Queen Victoria, the museum showcases artifacts from the British colonial period.</p>
+            <a class="location" href="https://maps.app.goo.gl/pWr8nQiYfnWa5Ceu8">Location</a><p></p><br><br>
+            <a class="book" a href="bn5.html"><button>Book Now</button></a>
+        </div>
+    </main>
+    <main>
+        <h2>About Us</h2>
+        <p>We opted for a paperless ticket system in the museum to reduce environmental impact, streamline entry processes, enhance convenience for visitors, and embrace technological advancements for a more efficient and sustainable operation.</p>
+    </main>
+    <footer>
+        <p>Copyright &copy; 2023 - 2024 MeseoTicket. All Rights Reserved.</p>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Options</title>
+    <link rel="stylesheet" href="/CSS/pay.css">
+    <link rel="icon" href="/IMG/MT-ICON.png">
+</head>
+<body>
+
+    <div class="payment-form">
+        <h2>Select Your Payment Method</h2>
+        <form action="#" method="post" id="payment-form">
+            <label for="payment-method">Payment Method : </label>
+            <select id="payment-method" name="payment-method">
+                <option value="credit-card">Credit Card</option>
+                <option value="debit-card">Debit Card</option>
+                <option value="google-pay">Google Pay</option>
+                <option value="paytm">Paytm</option>
+                <option value="phonepe">PhonePe</option>
+                <option value="amazon-pay">Amazon Pay</option>
+            </select>
+
+            <div class="card-details">
+                <label for="cardholder-name">Cardholder Name :</label>
+                <input type="text" id="cardholder-name" name="cardholder-name" placeholder="Enter cardholder name" pattern="[A-Za-z ]*">
+
+                <label for="card-number">Card Number :</label>
+                <input type="text" id="card-number" name="card-number" placeholder="Enter your card number">
+
+                <label for="expiration-date">Expiration Date :</label>
+                <input type="date" id="expiration-date" name="expiration-date">
+
+                <label for="cvv">CVV :</label>
+                <input type="password" id="cvv" name="cvv" placeholder="Enter CVV">
+            </div>
+
+            <div class="upi-details">
+                <label for="upi-id">UPI ID :</label>
+                <input type="text" id="upi-id" name="upi-id" placeholder="Enter your UPI ID">
+
+                <h4>OR</h4>
+
+                <label for="phone-number">Phone Number :</label>
+                <input type="text" id="phone-number" name="phone-number" placeholder="Enter your phone number">
+            </div>
+
+            <input type="checkbox" id="save-payment-info" name="save-payment-info">
+            <label for="save-payment-info">Save payment information for future use</label>
+
+            <input type="submit" value="Submit">
+        </form>
+    </div>
+
+
+    <div class="popup" id="success-popup">
+            <h2>Payment Successful</h2>
+            <div class="tick-animation">&#10004;</div>
+    </div>
+
+
+
+<script>
+    function updateDetailsDisplay() {
+        var cardDetails = document.querySelector('.card-details');
+        var upiDetails = document.querySelector('.upi-details');
+        var paymentMethod = document.getElementById('payment-method');
+
+        if (paymentMethod.value.trim() === 'credit-card' || paymentMethod.value.trim() === 'debit-card') {
+            cardDetails.style.display = 'block';
+            upiDetails.style.display = 'none';
+        } else {
+            cardDetails.style.display = 'none';
+            upiDetails.style.display = 'block';
+        }
+    }
+
+    document.getElementById('payment-method').addEventListener('change', updateDetailsDisplay);
+
+    // Run on page load
+    updateDetailsDisplay();
+
+    // Allow only numbers in the card number field
+    var cardNumberInput = document.getElementById('card-number');
+    cardNumberInput.addEventListener('input', function() {
+        this.value = this.value.replace(/\D/g, '');
+	if (this.value.length > 16) {
+        	this.value = this.value.slice(0, 16);
+        }
+    });
+
+    var cvvInput = document.getElementById('cvv');
+    cvvInput.addEventListener('input', restrictToThreeDigitNumbers);
+
+    function restrictToThreeDigitNumbers() {
+        this.value = this.value.replace(/\D/g, ''); // Remove non-digit characters
+        if (this.value.length > 3) {
+            this.value = this.value.slice(0, 3); // Limit to three digits
+        }
+    }
+
+    var expirationDateInput = document.getElementById('expiration-date');
+    expirationDateInput.addEventListener('input', formatExpirationDate);
+
+    function formatExpirationDate() {
+        var inputValue = this.value;
+        if (inputValue.length === 10) {
+            var parts = inputValue.split('-');
+            this.value = parts[0] + '-' + parts[1] + '-' + parts[2].toUpperCase();
+        }
+    }
+
+    var phoneNumberInput = document.getElementById('phone-number');
+    phoneNumberInput.addEventListener('input', function() {
+        this.value = this.value.replace(/\D/g, '');
+        if (this.value.length > 10) {
+            this.value = this.value.slice(0, 10);
+        }
+    });
+
+    var cardholderNameInput = document.getElementById('cardholder-name');
+    cardholderNameInput.addEventListener('input', restrictToAlphabets);
+
+    function restrictToAlphabets() {
+        this.value = this.value.replace(/[^a-zA-Z ]/g, '');
+    }
+
+
+    function validateCardDetails() {
+    var cardholderName = document.getElementById('cardholder-name').value.trim();
+    var cardNumber = document.getElementById('card-number').value.trim();
+    var expirationDate = document.getElementById('expiration-date').value.trim();
+    var cvv = document.getElementById('cvv').value.trim();
+
+    return cardholderName !== '' && cardNumber !== '' && expirationDate !== '' && cvv !== '';
+    }
+
+    function validateUPIDetails() {
+        var upiID = document.getElementById('upi-id').value.trim();
+        var phoneNumber = document.getElementById('phone-number').value.trim();
+
+        return upiID !== '' || phoneNumber !== '';
+    }
+
+    function showErrorMessage(message) {
+        alert(message); // You can replace alert with a more sophisticated error display mechanism
+    }
+
+    function showSuccessPopup() {
+        var popup = document.getElementById('success-popup');
+
+        popup.style.display = 'block';
+        setTimeout(function() {
+            popup.style.display = 'none';
+            window.location.href = "dashboard.html";
+        }, 3000); // Hide popup after 3 seconds
+    }
+
+    document.getElementById('payment-form').addEventListener('submit', function(event) {
+        event.preventDefault(); // Prevent default form submission behavior
+        
+        var paymentMethod = document.getElementById('payment-method').value.trim();
+
+        if (paymentMethod === 'credit-card' || paymentMethod === 'debit-card') {
+            if (!validateCardDetails()) {
+                showErrorMessage('Please fill out all required fields in card details.');
+                return;
+            }
+        } else {
+            if (!validateUPIDetails()) {
+                showErrorMessage('Please fill out all required fields in UPI details.');
+                return;
+            }
+        }
+
+        showSuccessPopup();
+    });
+</script>
+
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+
+<script>
+    const firebaseConfig = {
+        apiKey: "AIzaSyBVwa6iPqpvlEPkDf5C5COimLMQJJQYh9k",
+        authDomain: "forstore-cf1f0.firebaseapp.com",
+        databaseURL: "https://forstore-cf1f0-default-rtdb.firebaseio.com",
+        projectId: "forstore-cf1f0",
+        storageBucket: "forstore-cf1f0.appspot.com",
+        messagingSenderId: "655130135915",
+        appId: "1:655130135915:web:a71a12e0a449c8476b102e"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+
+    function submitPaymentDetails(paymentMethod, paymentDetails) {
+    var database = firebase.database();
+    var paymentsRef = database.ref('payments');
+
+    // Set payment details directly under the 'payment' node
+    paymentsRef.child(paymentMethod).set(paymentDetails)
+        .then(() => {
+            console.log("Payment details submitted successfully.");
+            showSuccessPopup(); // Optionally, show a success popup or perform other actions
+        })
+        .catch(error => {
+            console.error("Error adding document: ", error);
+            alert("An error occurred while submitting payment details. Please try again later.");
+        });
+    }
+
+
+
+    document.getElementById('payment-form').addEventListener('submit', function(event) {
+        event.preventDefault(); // Prevent default form submission behavior
+
+        var paymentMethod = document.getElementById('payment-method').value.trim();
+        var paymentDetails;
+
+        if (paymentMethod === 'credit-card' || paymentMethod === 'debit-card') {
+            var cardholderName = document.getElementById('cardholder-name').value.trim();
+            var cardNumber = document.getElementById('card-number').value.trim();
+            var expirationDate = document.getElementById('expiration-date').value.trim();
+            var cvv = document.getElementById('cvv').value.trim();
+
+            paymentDetails = {
+                cardholderName: cardholderName,
+                cardNumber: cardNumber,
+                expirationDate: expirationDate,
+                cvv: cvv
+            };
+        } else {
+            var upiId = document.getElementById('upi-id').value.trim();
+            var phoneNumber = document.getElementById('phone-number').value.trim();
+
+            paymentDetails = {
+                upiId: upiId,
+                phoneNumber: phoneNumber
+            };
+        }
+
+        // Submit payment details to Firebase
+        submitPaymentDetails(paymentMethod, paymentDetails);
+    });
+</script>
+
+
+</body>
+</html>

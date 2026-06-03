@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MeseoTicket</title>
+    <link rel="stylesheet" href="/CSS/ticket.css">
+    <link rel="icon" href="/IMG/MT-ICON.png">
+</head>
+<body>
+    <header>
+        <h3>"Museums are not mere structures; they are living evidences to the beauty of history, the perseverance of civilizations, and the power of human creativity."</h3>
+    </header>
+    <nav>
+        <text class="logo">MeseoTicket</text>
+        <ul class="nav_links">
+            <li><a href="dashboard.html">Home</a></li>
+            <li><a href="ticket.html">My Tickets</a></li>
+            <li><a href="contact_in.html">Contact</a></li>
+        </ul>
+        <a class="log" href="index.html" style="text-decoration: none;"><button>Logout</button></a>
+    </nav>
+
+    <main>
+        <div id="ticketsContainer" class="ticket-container">
+            <!-- Ticket representations will be dynamically added here -->
+        </div>
+    </main>
+
+    <footer>
+        <p>Copyright &copy; 2023 - 2024 MeseoTicket. All Rights Reserved.</p>
+    </footer>
+
+    <!-- Firebase JavaScript SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
+
+    <script>
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBVwa6iPqpvlEPkDf5C5COimLMQJJQYh9k",
+            authDomain: "forstore-cf1f0.firebaseapp.com",
+            databaseURL: "https://forstore-cf1f0-default-rtdb.firebaseio.com",
+            projectId: "forstore-cf1f0",
+            storageBucket: "forstore-cf1f0.appspot.com",
+            messagingSenderId: "655130135915",
+            appId: "1:655130135915:web:a71a12e0a449c8476b102e",
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        // Function to generate a random ticket ID
+        function generateTicketId() {
+            let number = '';
+            for (let i = 0; i < 6; i++) {
+                number += Math.floor(Math.random() * 10);
+            }
+            return number;
+        }
+
+        // Function to display bookings data from Firebase as tickets
+        function displayBookings() {
+            const ticketsContainer = document.getElementById('ticketsContainer');
+
+            // Fetch data from Firebase
+            database.ref('bookings').once('value', function(snapshot) {
+                snapshot.forEach(function(locationSnapshot) {
+                    const location = locationSnapshot.key;
+
+                    locationSnapshot.forEach(function(dateSnapshot) {
+                        const date = dateSnapshot.key;
+
+                        dateSnapshot.forEach(function(slotSnapshot) {
+                            const slot = slotSnapshot.key;
+                            const passengers = slotSnapshot.val().visitors;
+                            const totalFare = slotSnapshot.val().totalFare;
+                            const ticketId = generateTicketId(); // Generate unique ticket ID
+
+                            const ticketDiv = document.createElement('div');
+                            ticketDiv.classList.add('ticket');
+
+                            const header = document.createElement('div');
+                            header.classList.add('ticket-header');
+                            header.innerHTML = `<h2 class="ticket-title">Museum Visit</h2>`;
+                            ticketDiv.appendChild(header);
+
+                            const ticketDetails = document.createElement('div');
+                            ticketDetails.classList.add('ticket-details');
+                            ticketDetails.innerHTML = `
+                                <span class="ticket-label">Ticket ID :</span>
+                                <span class="ticket-value ticket-id">${ticketId}</span><br>
+                                <div class="ticket-details">
+                                    <div>
+                                        <span class="ticket-label">Date :</span>
+                                        <span class="ticket-value ticket-date">${date}</span>
+                                        <span class="ticket-label">Slot :</span>
+                                        <span class="ticket-value ticket-time">${slot}</span>
+                                    </div>
+                                    <div>
+                                        <span class="ticket-label">Location :</span>
+                                        <span class="ticket-value ticket-location">${location}</span>
+                                    </div>
+                                </div>
+                            `;
+                            ticketDiv.appendChild(ticketDetails);
+
+                            if (passengers && passengers.length > 0) {
+                                const visitorTable = document.createElement('table');
+                                visitorTable.classList.add('visitor-details');
+                                let tableHTML = `
+                                    <thead>
+                                        <tr>
+                                            <th>Sr No</th>
+                                            <th>Name</th>
+                                            <th>Age</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                `;
+                                passengers.forEach(function(passenger, index) {
+                                    tableHTML += `
+                                        <tr>
+                                            <td>${index + 1}</td>
+                                            <td>${passenger.name}</td>
+                                            <td>${passenger.age}</td>
+                                        </tr>
+                                    `;
+                                });
+                                tableHTML += `</tbody>`;
+                                visitorTable.innerHTML = tableHTML;
+                                ticketDiv.appendChild(visitorTable);
+                            }
+
+                            if (totalFare) {
+                                const totalFareDiv = document.createElement('div');
+                                totalFareDiv.classList.add('ticket-details');
+                                totalFareDiv.innerHTML = `
+                                    <span class="ticket-label">Total Fare:</span>
+                                    <span class="ticket-value ticket-fare">${totalFare}</span>
+                                `;
+                                ticketDiv.appendChild(totalFareDiv);
+
+                                const spaceDiv = document.createElement('div');
+                                spaceDiv.classList.add('space-below-total-fare');
+                                ticketDiv.appendChild(spaceDiv);
+                            }
+
+                            // QR Code Button
+                            const qrButton = document.createElement('button');
+                            qrButton.textContent = 'Show QR Code';
+                            qrButton.setAttribute('id', 'qrButton');
+                            qrButton.addEventListener('click', function() {
+                                // Check if QR code already exists for this ticket
+                                if (!ticketDiv.querySelector('.qr-container')) {
+                                    // Generate JSON data for ticket details
+                                    const ticketDetailsJSON = {
+                                        ticketId : ticketId,
+                                        location : location,
+                                        date : date,
+                                        slot : slot,
+                                        passengers : passengers,
+                                        totalFare : totalFare
+                                    };
+
+                                    // Generate QR code from JSON data
+                                    const qrCode = new QRious({
+                                        element: document.createElement('canvas'),
+                                        value: JSON.stringify(ticketDetailsJSON),
+                                        size: 150
+                                    });
+
+                                    // Display QR code
+                                    const qrContainer = document.createElement('div');
+                                    qrContainer.classList.add('qr-container');
+                                    qrContainer.appendChild(qrCode.canvas);
+                                    ticketDiv.appendChild(qrContainer);
+                                }
+                            });
+                            ticketDiv.appendChild(qrButton);
+
+                            ticketsContainer.appendChild(ticketDiv);
+                        });
+                    });
+                });
+            });
+        }
+
+        // Call the function to display bookings data when the page loads
+        window.onload = function() {
+            displayBookings();
+        };
+
+    </script>
+</body>
+</html>

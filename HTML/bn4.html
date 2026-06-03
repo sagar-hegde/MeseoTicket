@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BOOK NOW</title>
+    <link rel="stylesheet" href="/CSS/bn.css">
+    <link rel="icon" href="/IMG/MT-ICON.png">
+</head>
+
+<body>
+    <div class="box">
+        <h2>Please Enter Your Slot</h2>
+
+        <div class="time">
+            <label for="dateInput">Select Date : </label>
+            <input type="date" id="dateInput" name="dateInput">
+        </div>
+
+        <div class="Slot">
+            <label for="slotInput">Select Slot : </label>
+            <select id="slotInput" name="slotInput">
+                <option value="morning">Morning</option>
+                <option value="afternoon">Afternoon</option>
+                <option value="evening">Evening</option>
+                <option value="night">Night</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="container">
+        <h2>Please Enter Visitor Details</h2>
+        <form id="passengerForm">
+            <table id="passengerTable">
+                <thead>
+                    <tr>
+                        <th>No.</th>
+                        <th>Name</th>
+                        <th>Age</th>
+                        <th>Fare</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Rows will be dynamically added here -->
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="3"><strong>Total Fare</strong></td>
+                        <td><input type="text" name="totalFare" readonly></td>
+                        <td></td>
+                    </tr>
+                </tfoot>
+            </table>
+            <button type="button" onclick="addPassenger()">Add Passenger</button>
+            <button type="button" onclick="storeData()" id="storeDataButton" class="Payment" disabled>Proceed to Payment</button>
+        </form>
+    </div>
+
+    <!-- Firebase JavaScript SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+
+    <script>
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBVwa6iPqpvlEPkDf5C5COimLMQJJQYh9k",
+            authDomain: "forstore-cf1f0.firebaseapp.com",
+            databaseURL: "https://forstore-cf1f0-default-rtdb.firebaseio.com",
+            projectId: "forstore-cf1f0",
+            storageBucket: "forstore-cf1f0.appspot.com",
+            messagingSenderId: "655130135915",
+            appId: "1:655130135915:web:a71a12e0a449c8476b102e",
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        document.getElementById("dateInput").min = new Date().toISOString().split("T")[0];
+
+        function addPassenger() {
+            const tableBody = document.getElementById("passengerTable").getElementsByTagName('tbody')[0];
+            const newRow = tableBody.insertRow(tableBody.rows.length);
+
+            const cell1 = newRow.insertCell(0);
+            const cell2 = newRow.insertCell(1);
+            const cell3 = newRow.insertCell(2);
+            const cell4 = newRow.insertCell(3);
+            const cell5 = newRow.insertCell(4);
+
+            // Assign passenger number
+            cell1.innerHTML = tableBody.rows.length;
+
+            cell2.innerHTML = '<input type="text" name="name[]">';
+            cell3.innerHTML = '<input type="number" name="age[]" min="1">';
+            cell4.innerHTML = '<input type="text" name="fare[]" readonly value="0">'; // Set initial fare to 0
+            cell5.innerHTML = '<button type="button" class="deleteButton" onclick="deletePassenger(this)">Delete</button>';
+
+            let fare = 0;
+
+            // Add event listener for age input to calculate fare
+            const ageInput = newRow.querySelector('input[name="age[]"]');
+            ageInput.addEventListener('input', calculateFare);
+
+            // Calculate initial fare
+            calculateFare();
+            document.getElementById("storeDataButton").disabled = false;
+        }
+
+        function deletePassenger(button) {
+            const tableBody = document.getElementById("passengerTable").getElementsByTagName('tbody')[0];
+            const row = button.parentNode.parentNode;
+
+            // Get the row index
+            const rowIndex = Array.from(tableBody.rows).indexOf(row);
+
+            // Remove the row
+            tableBody.removeChild(row);
+
+            // Update passenger numbers
+            for (let i = rowIndex; i < tableBody.rows.length; i++) {
+                tableBody.rows[i].cells[0].innerHTML = i + 1;
+            }
+
+            calculateFare();
+        }
+
+        function calculateFare() {
+            const tableBody = document.getElementById("passengerTable").getElementsByTagName('tbody')[0];
+            const totalFareInput = document.querySelector('input[name="totalFare"]');
+            let totalFare = 0;
+
+            for (let i = 0; i < tableBody.rows.length; i++) {
+                const ageInput = tableBody.rows[i].querySelector('input[name="age[]"]');
+                const fareInput = tableBody.rows[i].querySelector('input[name="fare[]"]');
+
+                let fare = 0;
+                const age = parseInt(ageInput.value);
+
+                if (age >= 5 && age <= 18) {
+                    fare = 150;
+                } else if (age > 18) {
+                    fare = 450;
+                }
+
+                fareInput.value = fare;
+                totalFare += fare;
+            }
+
+            totalFareInput.value = totalFare;
+        }
+
+        function storeData() {
+            const location = "Salar Jung Museum"; 
+            const date = document.getElementById("dateInput").value;
+            const slot = document.getElementById("slotInput").value;
+            const passengers = [];
+            let totalFare = 0; // Initialize total fare
+
+            const tableBody = document.getElementById("passengerTable").getElementsByTagName('tbody')[0];
+            for (let i = 0; i < tableBody.rows.length; i++) {
+                const name = tableBody.rows[i].querySelector('input[name="name[]"]').value;
+                const age = tableBody.rows[i].querySelector('input[name="age[]"]').value;
+                const fare = tableBody.rows[i].querySelector('input[name="fare[]"]').value; // Get fare from input
+
+                passengers.push({ fare, age, name }); // Include fare in passenger data
+                totalFare += parseInt(fare); // Add fare to total fare
+            }
+
+            // Store data into Firebase under location -> date -> slot -> passengers structure
+            database.ref('bookings').child(location).child(date).child(slot).set({
+                visitors: passengers,
+                totalFare: totalFare // Include total fare in the data being stored
+            }).then(() => {
+                // Redirect to pay.html after successfully storing data
+                window.location.href = 'pay.html';
+            }).catch((error) => {
+                // Handle errors if any
+                console.error("Error storing data:", error);
+            });
+
+            // Reset form and table after storing data
+            document.getElementById("dateInput").value = "";
+            document.getElementById("slotInput").value = "morning";
+            tableBody.innerHTML = "";
+
+            // Disable the store data button after submission
+            document.getElementById("storeDataButton").disabled = true;
+        }
+
+    </script>
+</body>
+</html>
