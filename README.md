@@ -94,7 +94,7 @@ MeseoTicket introduces a **paperless, contactless ticketing platform** with:
 
 ---
 
-## 🎯 Key Highlights for Recruiters
+## 🎯 Key Highlights of Projects
 
 ✔ Real-world problem solving  
 ✔ Firebase integration  
